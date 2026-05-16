@@ -142,3 +142,8 @@
 ::-webkit-scrollbar-thumb:hover {
   background: oklch(0.55 0.1 165);
 }
+
+
+button {
+  cursor: pointer;
+}

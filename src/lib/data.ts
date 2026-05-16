@@ -9,14 +9,12 @@ export const personalInfo = {
   shortTitle: "IT Specialist & System Admin",
   profileImage: "https://cdn.corenexis.com/files/c/4816192720.png",
   location: "Qalubia, Egypt",
-  email: "mohamedmamdouh@example.com",
-  phone: "+20 103 054 2651",
+  email: "mohamedmamdouhkhairy2421@gmail.com",
+  phone: "01030542651",
   university: "Cairo University — FCAI",
   social: {
-    facebook: "https://facebook.com/mohamedmamdouh",
-    instagram: "https://instagram.com/mohamedmamdouh",
-    linkedin: "#",
-    github: "#",
+    facebook: "https://www.facebook.com/share/1H2X1SJ66u/",
+    instagram: "https://www.instagram.com/mohamedmamdouh.4",
   },
 };
 

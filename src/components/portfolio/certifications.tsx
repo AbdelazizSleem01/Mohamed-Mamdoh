@@ -26,10 +26,10 @@ export function Certifications() {
               className="group relative rounded-2xl border border-border bg-card p-6 hover:border-teal-500/30 transition-all"
             >
               {/* Gradient corner accent */}
-              <div className="absolute top-0 right-0 w-20 h-20 bg-gradient-to-bl from-teal-500/10 to-transparent rounded-tr-2xl rounded-bl-[3rem]" />
+              <div className="absolute top-0 right-0 w-20 h-20 bg-linear-to-bl from-teal-500/10 to-transparent rounded-tr-2xl rounded-bl-[3rem]" />
 
               <div className="relative">
-                <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-teal-500 to-emerald-600 flex items-center justify-center mb-4 shadow-lg shadow-teal-500/25">
+                <div className="w-12 h-12 rounded-2xl bg-linear-to-br from-teal-500 to-emerald-600 flex items-center justify-center mb-4 shadow-lg shadow-teal-500/25">
                   <Award className="h-5 w-5 text-white" />
                 </div>
 

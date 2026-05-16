@@ -47,7 +47,7 @@ export function SectionHeading({
         </p>
       )}
       <div
-        className={`mt-4 h-1 w-16 rounded-full bg-gradient-to-r from-teal-500 to-emerald-500 ${
+        className={`mt-4 h-1 w-16 rounded-full bg-linear-to-r from-teal-500 to-emerald-500 ${
           align === "center" ? "mx-auto" : ""
         }`}
       />

@@ -3,7 +3,19 @@
 import { personalInfo, navLinks } from "@/lib/data";
 import { useState, useEffect } from "react";
 import { ThemeToggle } from "./theme-toggle";
-import { Menu, X } from "lucide-react";
+import {
+  Menu,
+  X,
+  House,
+  User,
+  Wrench,
+  Briefcase,
+  GraduationCap,
+  Award,
+  Handshake,
+  Mail,
+} from "lucide-react";
+import type { LucideIcon } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
 export function Navbar() {
@@ -24,6 +36,17 @@ export function Navbar() {
     }
   };
 
+  const linkIconMap: Record<string, LucideIcon> = {
+    Home: House,
+    About: User,
+    Skills: Wrench,
+    Experience: Briefcase,
+    Education: GraduationCap,
+    Certifications: Award,
+    Services: Handshake,
+    Contact: Mail,
+  };
+
   return (
     <header
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
@@ -32,7 +55,7 @@ export function Navbar() {
           : "bg-transparent"
       }`}
     >
-      <nav className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <nav className=" mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
         {/* Logo */}
         <a
           href="#hero"
@@ -42,9 +65,11 @@ export function Navbar() {
           }}
           className="flex items-center gap-2 font-bold text-lg"
         >
-          <span className="flex items-center justify-center w-9 h-9 rounded-xl bg-gradient-to-br from-teal-500 to-emerald-600 text-white text-sm font-bold">
-            MM
-          </span>
+          <img
+            src="/LOGO-light.png"
+            alt="Logo"
+            className="w-12 h-12 rounded-xl object-cover"
+          />
           <span className="hidden sm:inline">
             {personalInfo.name.split(" ").slice(0, 2).join(" ")}
           </span>
@@ -60,9 +85,16 @@ export function Navbar() {
                 e.preventDefault();
                 handleLinkClick(link.href);
               }}
-              className="px-3 py-2 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors rounded-lg hover:bg-accent"
+              className="group relative px-3 py-2 text-sm font-medium text-muted-foreground rounded-lg inline-flex items-center gap-1.5 transition-all duration-300 hover:text-teal-700 dark:hover:text-teal-300 hover:bg-teal-500/10"
             >
-              {link.label}
+              {(() => {
+                const Icon = linkIconMap[link.label];
+                return Icon ? (
+                  <Icon className="h-3.5 w-3.5 transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:scale-110" />
+                ) : null;
+              })()}
+              <span>{link.label}</span>
+              <span className="pointer-events-none absolute left-2 right-2 -bottom-0.5 h-0.5 origin-left scale-x-0 rounded-full bg-linear-to-r from-teal-500 to-emerald-500 transition-transform duration-300 group-hover:scale-x-100" />
             </a>
           ))}
         </div>
@@ -76,7 +108,7 @@ export function Navbar() {
               e.preventDefault();
               handleLinkClick("#contact");
             }}
-            className="hidden sm:inline-flex px-4 py-2 text-sm font-medium rounded-lg bg-gradient-to-r from-teal-500 to-emerald-600 text-white hover:opacity-90 transition-opacity"
+            className="hidden sm:inline-flex px-4 py-2 text-sm font-medium rounded-lg bg-linear-to-r from-teal-500 to-emerald-600 text-white hover:opacity-90 transition-opacity"
           >
             Hire Me
           </a>
@@ -113,8 +145,14 @@ export function Navbar() {
                     e.preventDefault();
                     handleLinkClick(link.href);
                   }}
-                  className="block px-3 py-2.5 text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-accent rounded-lg transition-colors"
+                  className="group px-3 py-2.5 text-sm font-medium text-muted-foreground rounded-lg transition-all duration-300 flex items-center gap-2 hover:bg-teal-500/10 hover:text-teal-700 dark:hover:text-teal-300"
                 >
+                  {(() => {
+                    const Icon = linkIconMap[link.label];
+                    return Icon ? (
+                      <Icon className="h-4 w-4 transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:scale-110" />
+                    ) : null;
+                  })()}
                   {link.label}
                 </a>
               ))}
@@ -124,7 +162,7 @@ export function Navbar() {
                   e.preventDefault();
                   handleLinkClick("#contact");
                 }}
-                className="block px-3 py-2.5 text-sm font-medium text-center rounded-lg bg-gradient-to-r from-teal-500 to-emerald-600 text-white mt-2"
+                className="block px-3 py-2.5 text-sm font-medium text-center rounded-lg bg-linear-to-r from-teal-500 to-emerald-600 text-white mt-2"
               >
                 Hire Me
               </a>

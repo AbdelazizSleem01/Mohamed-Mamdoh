@@ -27,13 +27,13 @@ export function Experience() {
             >
               {/* Timeline line */}
               {idx < experiences.length - 1 && (
-                <div className="absolute left-5 top-full w-px h-full bg-border -translate-x-1/2" />
+                <div className="absolute left-5 top-10 -bottom-8 w-px bg-border -translate-x-1/2" />
               )}
 
               <div className="flex gap-6">
                 {/* Timeline dot */}
-                <div className="flex-shrink-0 relative">
-                  <div className="w-10 h-10 rounded-full bg-gradient-to-br from-teal-500 to-emerald-600 flex items-center justify-center shadow-lg shadow-teal-500/25">
+                <div className="shrink-0 relative">
+                  <div className="w-10 h-10 rounded-full bg-linear-to-br from-teal-500 to-emerald-600 flex items-center justify-center shadow-lg shadow-teal-500/25">
                     <Briefcase className="h-4 w-4 text-white" />
                   </div>
                 </div>
@@ -63,7 +63,7 @@ export function Experience() {
                         key={rIdx}
                         className="flex items-start gap-2.5 text-muted-foreground"
                       >
-                        <span className="mt-2 w-1.5 h-1.5 rounded-full bg-teal-500 flex-shrink-0" />
+                        <span className="mt-2 w-1.5 h-1.5 rounded-full bg-teal-500 shrink-0" />
                         <span className="leading-relaxed text-sm">
                           {resp}
                         </span>

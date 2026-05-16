@@ -26,8 +26,8 @@ export function Education() {
               className="flex gap-6"
             >
               {/* Icon */}
-              <div className="flex-shrink-0">
-                <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-teal-500 to-emerald-600 flex items-center justify-center shadow-lg shadow-teal-500/25">
+              <div className="shrink-0">
+                <div className="w-12 h-12 rounded-2xl bg-linear-to-br from-teal-500 to-emerald-600 flex items-center justify-center shadow-lg shadow-teal-500/25">
                   <GraduationCap className="h-5 w-5 text-white" />
                 </div>
               </div>

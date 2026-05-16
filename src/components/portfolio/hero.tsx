@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { motion } from "framer-motion";
 import { personalInfo, professionalSummary } from "@/lib/data";
@@ -8,8 +8,6 @@ import {
   Mail,
   Facebook,
   Instagram,
-  Linkedin,
-  Github,
   MapPin,
   Phone,
 } from "lucide-react";
@@ -18,8 +16,7 @@ export function Hero() {
   const socialLinks = [
     { icon: Facebook, href: personalInfo.social.facebook, label: "Facebook" },
     { icon: Instagram, href: personalInfo.social.instagram, label: "Instagram" },
-    { icon: Linkedin, href: personalInfo.social.linkedin, label: "LinkedIn" },
-    { icon: Github, href: personalInfo.social.github, label: "GitHub" },
+    { icon: Phone, href: `tel:${personalInfo.phone}`, label: "Phone" },
   ];
 
   return (
@@ -29,9 +26,21 @@ export function Hero() {
     >
       {/* Background decoration */}
       <div className="absolute inset-0 -z-10">
-        <div className="absolute top-1/4 left-1/4 w-72 h-72 bg-teal-500/10 rounded-full blur-3xl" />
-        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-emerald-500/10 rounded-full blur-3xl" />
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-teal-500/5 rounded-full blur-3xl" />
+        <motion.div
+          animate={{ x: [0, 30, 0], y: [0, -20, 0] }}
+          transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
+          className="absolute top-1/4 left-1/4 w-72 h-72 bg-teal-500/10 rounded-full blur-3xl"
+        />
+        <motion.div
+          animate={{ x: [0, -25, 0], y: [0, 20, 0] }}
+          transition={{ duration: 9, repeat: Infinity, ease: "easeInOut" }}
+          className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-emerald-500/10 rounded-full blur-3xl"
+        />
+        <motion.div
+          animate={{ scale: [1, 1.08, 1], opacity: [0.25, 0.45, 0.25] }}
+          transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-150 h-150 bg-teal-500/5 rounded-full blur-3xl"
+        />
       </div>
 
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-32 sm:py-40">
@@ -56,9 +65,15 @@ export function Hero() {
 
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight mb-4">
               Hi, I&apos;m{" "}
-              <span className="bg-gradient-to-r from-teal-500 to-emerald-500 bg-clip-text text-transparent">
+              <motion.span
+                animate={{
+                  backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"],
+                }}
+                transition={{ duration: 5, repeat: Infinity, ease: "linear" }}
+                className="bg-linear-to-r from-teal-500 via-emerald-500 to-teal-500 bg-size-[200%_200%] bg-clip-text text-transparent"
+              >
                 {personalInfo.name.split(" ").slice(0, 2).join(" ")}
-              </span>
+              </motion.span>
             </h1>
 
             <motion.p
@@ -110,9 +125,10 @@ export function Hero() {
               <a
                 href="/Mohamed_Mamdouh_Resume.pdf"
                 download
-                className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-gradient-to-r from-teal-500 to-emerald-600 text-white font-medium hover:opacity-90 transition-all shadow-lg shadow-teal-500/25"
+                className="group relative overflow-hidden inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-linear-to-r from-teal-500 to-emerald-600 text-white font-medium transition-all duration-300 shadow-lg shadow-teal-500/25 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-teal-500/35"
               >
-                <Download className="h-4 w-4" />
+                <span className="pointer-events-none absolute inset-0 -translate-x-full bg-linear-to-r from-transparent via-white/30 to-transparent transition-transform duration-700 group-hover:translate-x-full" />
+                <Download className="h-4 w-4 transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:scale-110" />
                 Download CV
               </a>
               <a
@@ -123,9 +139,9 @@ export function Hero() {
                     .querySelector("#contact")
                     ?.scrollIntoView({ behavior: "smooth" });
                 }}
-                className="inline-flex items-center gap-2 px-6 py-3 rounded-xl border border-border bg-card font-medium hover:bg-accent transition-all"
+                className="group inline-flex items-center gap-2 px-6 py-3 rounded-xl border border-border bg-card font-medium transition-all duration-300 hover:-translate-y-0.5 hover:border-teal-500/50 hover:bg-teal-500/10 hover:text-teal-700 dark:hover:text-teal-300"
               >
-                <Mail className="h-4 w-4" />
+                <Mail className="h-4 w-4 transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:scale-110" />
                 Contact Me
               </a>
             </motion.div>
@@ -141,12 +157,12 @@ export function Hero() {
                 <a
                   key={social.label}
                   href={social.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center justify-center w-10 h-10 rounded-xl border border-border bg-card hover:bg-accent hover:border-teal-500/50 transition-all"
+                  target={social.label === "Phone" ? undefined : "_blank"}
+                  rel={social.label === "Phone" ? undefined : "noopener noreferrer"}
+                  className="group flex items-center justify-center w-10 h-10 rounded-xl border border-border bg-card transition-all duration-300 hover:-translate-y-0.5 hover:border-teal-500/50 hover:bg-teal-500/10 hover:text-teal-700 dark:hover:text-teal-300"
                   aria-label={social.label}
                 >
-                  <social.icon className="h-4 w-4" />
+                  <social.icon className="h-4 w-4 transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:scale-110" />
                 </a>
               ))}
             </motion.div>
@@ -157,12 +173,12 @@ export function Hero() {
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: 0.2, duration: 0.6 }}
-            className="relative flex-shrink-0"
+            className="relative shrink-0"
           >
             <div className="relative w-64 h-64 sm:w-80 sm:h-80 lg:w-96 lg:h-96">
               {/* Gradient ring */}
-              <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-teal-500 to-emerald-600 rotate-6 opacity-20 blur-sm" />
-              <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-teal-500/20 to-emerald-600/20 rotate-3 border border-teal-500/20" />
+              <div className="absolute inset-0 rounded-3xl bg-linear-to-br from-teal-500 to-emerald-600 rotate-6 opacity-20 blur-sm" />
+              <div className="absolute inset-0 rounded-3xl bg-linear-to-br from-teal-500/20 to-emerald-600/20 rotate-3 border border-teal-500/20" />
               {/* Image container */}
               <div className="relative w-full h-full rounded-3xl overflow-hidden border-2 border-border bg-card">
                 <img
@@ -171,7 +187,7 @@ export function Hero() {
                   className="w-full h-full object-cover"
                 />
                 {/* Overlay gradient */}
-                <div className="absolute inset-0 bg-gradient-to-t from-background/20 to-transparent" />
+                <div className="absolute inset-0 bg-linear-to-t from-background/20 to-transparent" />
               </div>
             </div>
           </motion.div>
@@ -207,3 +223,4 @@ export function Hero() {
     </section>
   );
 }
+

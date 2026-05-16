@@ -44,7 +44,7 @@ export function Services() {
                 transition={{ duration: 0.4, delay: idx * 0.08 }}
                 className="group relative rounded-2xl border border-border bg-card p-6 sm:p-8 hover:border-teal-500/30 transition-all"
               >
-                <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-teal-500 to-emerald-500 rounded-t-2xl opacity-0 group-hover:opacity-100 transition-opacity" />
+                <div className="absolute top-0 left-0 w-full h-1 bg-linear-to-r from-teal-500 to-emerald-500 rounded-t-2xl opacity-0 group-hover:opacity-100 transition-opacity" />
 
                 <div className="w-12 h-12 rounded-2xl bg-teal-500/10 text-teal-600 dark:text-teal-400 flex items-center justify-center mb-5 group-hover:bg-teal-500/20 transition-colors">
                   <IconComp className="h-6 w-6" />
