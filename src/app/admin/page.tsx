@@ -40,7 +40,27 @@ function toLines(values: string[]) {
 }
 
 function fromLines(value: string) {
-  return value.split("\n").map((line) => line.trim()).filter(Boolean);
+  return value.split("\n").map((line) => line.trim());
+}
+
+function compactLines(values: string[]) {
+  return values.map((line) => line.trim()).filter(Boolean);
+}
+
+function normalizeForSave(content: PortfolioContent): PortfolioContent {
+  return {
+    ...content,
+    aboutHighlights: compactLines(content.aboutHighlights),
+    softSkills: compactLines(content.softSkills),
+    skillCategories: content.skillCategories.map((category) => ({
+      ...category,
+      skills: compactLines(category.skills),
+    })),
+    experiences: content.experiences.map((experience) => ({
+      ...experience,
+      responsibilities: compactLines(experience.responsibilities),
+    })),
+  };
 }
 
 function showToast(icon: "success" | "error" | "info", title: string) {
@@ -200,7 +220,7 @@ export default function AdminPage() {
       const res = await fetch("/api/content", {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ content }),
+        body: JSON.stringify({ content: normalizeForSave(content) }),
       });
       const json = (await res.json()) as { ok?: boolean; error?: string };
       if (res.status === 401) return (window.location.href = "/admin/login");

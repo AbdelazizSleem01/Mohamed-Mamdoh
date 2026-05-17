@@ -11,6 +11,9 @@ import { Footer } from "@/components/portfolio/footer";
 import { PortfolioDataProvider } from "@/components/portfolio/portfolio-data-provider";
 import { getPortfolioContent } from "@/lib/portfolio-store";
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 export default async function Home() {
   const content = await getPortfolioContent();
 
