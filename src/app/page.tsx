@@ -8,22 +8,28 @@ import { Certifications } from "@/components/portfolio/certifications";
 import { Services } from "@/components/portfolio/services";
 import { Contact } from "@/components/portfolio/contact";
 import { Footer } from "@/components/portfolio/footer";
+import { PortfolioDataProvider } from "@/components/portfolio/portfolio-data-provider";
+import { getPortfolioContent } from "@/lib/portfolio-store";
 
-export default function Home() {
+export default async function Home() {
+  const content = await getPortfolioContent();
+
   return (
-    <div className="min-h-screen flex flex-col">
-      <Navbar />
-      <main className="flex-1">
-        <Hero />
-        <About />
-        <Skills />
-        <Experience />
-        <Education />
-        <Certifications />
-        <Services />
-        <Contact />
-      </main>
-      <Footer />
-    </div>
+    <PortfolioDataProvider initialData={content}>
+      <div className="min-h-screen flex flex-col">
+        <Navbar />
+        <main className="flex-1">
+          <Hero />
+          <About />
+          <Skills />
+          <Experience />
+          <Education />
+          <Certifications />
+          <Services />
+          <Contact />
+        </main>
+        <Footer />
+      </div>
+    </PortfolioDataProvider>
   );
 }

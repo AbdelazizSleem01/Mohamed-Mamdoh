@@ -1,7 +1,6 @@
 ﻿"use client";
 
 import { motion } from "framer-motion";
-import { personalInfo } from "@/lib/data";
 import { SectionHeading } from "./section-heading";
 import {
   Mail,
@@ -14,8 +13,12 @@ import {
   Check,
 } from "lucide-react";
 import { useState, type ChangeEvent, type FormEvent } from "react";
+import { usePortfolioData } from "./portfolio-data-provider";
 
 export function Contact() {
+  const { data } = usePortfolioData();
+  const { personalInfo } = data;
+
   const [copied, setCopied] = useState(false);
   const [formData, setFormData] = useState({
     name: "",

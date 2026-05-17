@@ -1,11 +1,14 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { professionalSummary, aboutHighlights } from "@/lib/data";
 import { SectionHeading } from "./section-heading";
 import { User, CheckCircle2 } from "lucide-react";
+import { usePortfolioData } from "./portfolio-data-provider";
 
 export function About() {
+  const { data } = usePortfolioData();
+  const { professionalSummary, aboutHighlights } = data;
+
   return (
     <section id="about" className="py-20 sm:py-28">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">

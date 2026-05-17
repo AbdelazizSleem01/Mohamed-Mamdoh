@@ -1,26 +1,18 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { skillCategories, softSkills } from "@/lib/data";
 import { SectionHeading } from "./section-heading";
-import type { ElementType } from "react";
 import {
-  Monitor,
-  Network,
-  Cloud,
-  Wrench,
   BadgeCheck,
   Heart,
 } from "lucide-react";
-
-const iconMap: Record<string, ElementType> = {
-  Monitor,
-  Network,
-  Cloud,
-  Wrench,
-};
+import { usePortfolioData } from "./portfolio-data-provider";
+import { getIconComponent } from "@/lib/icon-catalog";
 
 export function Skills() {
+  const { data } = usePortfolioData();
+  const { skillCategories, softSkills } = data;
+
   return (
     <section id="skills" className="py-20 sm:py-28 bg-muted/30">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -33,7 +25,7 @@ export function Skills() {
         {/* Technical Skills Grid */}
         <div className="grid sm:grid-cols-2 xl:grid-cols-4 gap-6 mb-12">
           {skillCategories.map((category, idx) => {
-            const IconComp = iconMap[category.icon] || Monitor;
+            const IconComp = getIconComponent(category.icon);
             return (
               <motion.div
                 key={category.title}

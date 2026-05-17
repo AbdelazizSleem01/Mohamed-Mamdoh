@@ -1,24 +1,18 @@
 "use client";
 
-import { personalInfo, navLinks } from "@/lib/data";
 import { useState, useEffect } from "react";
 import { ThemeToggle } from "./theme-toggle";
 import {
   Menu,
   X,
-  House,
-  User,
-  Wrench,
-  Briefcase,
-  GraduationCap,
-  Award,
-  Handshake,
-  Mail,
 } from "lucide-react";
-import type { LucideIcon } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import { usePortfolioData } from "./portfolio-data-provider";
+import { getIconComponent } from "@/lib/icon-catalog";
 
 export function Navbar() {
+  const { data } = usePortfolioData();
+  const { personalInfo, navLinks } = data;
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
 
@@ -34,17 +28,6 @@ export function Navbar() {
     if (el) {
       el.scrollIntoView({ behavior: "smooth" });
     }
-  };
-
-  const linkIconMap: Record<string, LucideIcon> = {
-    Home: House,
-    About: User,
-    Skills: Wrench,
-    Experience: Briefcase,
-    Education: GraduationCap,
-    Certifications: Award,
-    Services: Handshake,
-    Contact: Mail,
   };
 
   return (
@@ -88,7 +71,7 @@ export function Navbar() {
               className="group relative px-3 py-2 text-sm font-medium text-muted-foreground rounded-lg inline-flex items-center gap-1.5 transition-all duration-300 hover:text-teal-700 dark:hover:text-teal-300 hover:bg-teal-500/10"
             >
               {(() => {
-                const Icon = linkIconMap[link.label];
+                const Icon = getIconComponent((link as { icon?: string }).icon ?? link.label);
                 return Icon ? (
                   <Icon className="h-3.5 w-3.5 transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:scale-110" />
                 ) : null;
@@ -148,7 +131,7 @@ export function Navbar() {
                   className="group px-3 py-2.5 text-sm font-medium text-muted-foreground rounded-lg transition-all duration-300 flex items-center gap-2 hover:bg-teal-500/10 hover:text-teal-700 dark:hover:text-teal-300"
                 >
                   {(() => {
-                    const Icon = linkIconMap[link.label];
+                    const Icon = getIconComponent((link as { icon?: string }).icon ?? link.label);
                     return Icon ? (
                       <Icon className="h-4 w-4 transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:scale-110" />
                     ) : null;

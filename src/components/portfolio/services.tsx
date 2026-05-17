@@ -1,28 +1,18 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { services } from "@/lib/data";
 import { SectionHeading } from "./section-heading";
 import {
-  Headphones,
   Server,
-  Network,
-  Cloud,
-  Cpu,
-  MonitorUp,
   ArrowRight,
 } from "lucide-react";
-
-const iconMap: Record<string, React.ElementType> = {
-  Headphones,
-  Server,
-  Network,
-  Cloud,
-  Cpu,
-  MonitorUp,
-};
+import { usePortfolioData } from "./portfolio-data-provider";
+import { getIconComponent } from "@/lib/icon-catalog";
 
 export function Services() {
+  const { data } = usePortfolioData();
+  const { services } = data;
+
   return (
     <section id="services" className="py-20 sm:py-28 bg-muted/30">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -34,7 +24,7 @@ export function Services() {
 
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {services.map((service, idx) => {
-            const IconComp = iconMap[service.icon] || Server;
+            const IconComp = getIconComponent(service.icon);
             return (
               <motion.div
                 key={service.title}

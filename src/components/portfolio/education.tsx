@@ -1,11 +1,14 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { education } from "@/lib/data";
 import { SectionHeading } from "./section-heading";
 import { GraduationCap, MapPin, Calendar } from "lucide-react";
+import { usePortfolioData } from "./portfolio-data-provider";
 
 export function Education() {
+  const { data } = usePortfolioData();
+  const { education } = data;
+
   return (
     <section id="education" className="py-20 sm:py-28 bg-muted/30">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">

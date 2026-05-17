@@ -1,11 +1,14 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { certifications } from "@/lib/data";
 import { SectionHeading } from "./section-heading";
 import { Award, ExternalLink } from "lucide-react";
+import { usePortfolioData } from "./portfolio-data-provider";
 
 export function Certifications() {
+  const { data } = usePortfolioData();
+  const { certifications } = data;
+
   return (
     <section id="certifications" className="py-20 sm:py-28">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">

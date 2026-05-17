@@ -226,12 +226,12 @@ export const languages = [
 
 // ── Nav Links ───────────────────────────────────────────────
 export const navLinks = [
-  { label: "Home", href: "#hero" },
-  { label: "About", href: "#about" },
-  { label: "Skills", href: "#skills" },
-  { label: "Experience", href: "#experience" },
-  { label: "Education", href: "#education" },
-  { label: "Certifications", href: "#certifications" },
-  { label: "Services", href: "#services" },
-  { label: "Contact", href: "#contact" },
+  { label: "Home", href: "#hero", icon: "House" },
+  { label: "About", href: "#about", icon: "User" },
+  { label: "Skills", href: "#skills", icon: "Wrench" },
+  { label: "Experience", href: "#experience", icon: "Briefcase" },
+  { label: "Education", href: "#education", icon: "GraduationCap" },
+  { label: "Certifications", href: "#certifications", icon: "Award" },
+  { label: "Services", href: "#services", icon: "Handshake" },
+  { label: "Contact", href: "#contact", icon: "Mail" },
 ];

@@ -1,11 +1,14 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { experiences } from "@/lib/data";
 import { SectionHeading } from "./section-heading";
 import { Briefcase, MapPin, Calendar } from "lucide-react";
+import { usePortfolioData } from "./portfolio-data-provider";
 
 export function Experience() {
+  const { data } = usePortfolioData();
+  const { experiences } = data;
+
   return (
     <section id="experience" className="py-20 sm:py-28">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">

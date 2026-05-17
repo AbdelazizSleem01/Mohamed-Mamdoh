@@ -1,9 +1,11 @@
 "use client";
 
-import { personalInfo } from "@/lib/data";
 import { Heart, ArrowUp } from "lucide-react";
+import { usePortfolioData } from "./portfolio-data-provider";
 
 export function Footer() {
+  const { data } = usePortfolioData();
+  const { personalInfo } = data;
   const firstName = personalInfo.name.split(" ").slice(0, 2).join(" ");
 
   const scrollToTop = () => {
@@ -24,7 +26,7 @@ export function Footer() {
               <div className="text-sm">
                 <p className="font-semibold text-foreground">{firstName}</p>
                 <p className="text-muted-foreground text-xs sm:text-sm">
-                  IT Help Desk Specialist & System Administrator
+                  {personalInfo.shortTitle}
                 </p>
               </div>
             </div>

@@ -1,7 +1,6 @@
 ﻿"use client";
 
 import { motion } from "framer-motion";
-import { personalInfo, professionalSummary } from "@/lib/data";
 import {
   ArrowDown,
   Download,
@@ -11,8 +10,11 @@ import {
   MapPin,
   Phone,
 } from "lucide-react";
+import { usePortfolioData } from "./portfolio-data-provider";
 
 export function Hero() {
+  const { data } = usePortfolioData();
+  const { personalInfo, professionalSummary } = data;
   const socialLinks = [
     { icon: Facebook, href: personalInfo.social.facebook, label: "Facebook" },
     { icon: Instagram, href: personalInfo.social.instagram, label: "Instagram" },
@@ -223,4 +225,3 @@ export function Hero() {
     </section>
   );
 }
-
