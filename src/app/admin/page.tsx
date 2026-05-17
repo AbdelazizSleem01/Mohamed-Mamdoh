@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState, type ComponentType, type ReactNode } from "react";
+import { createContext, useContext, useEffect, useMemo, useState, type ComponentType, type ReactNode } from "react";
 import { motion } from "framer-motion";
 import {
   FaUser,
@@ -27,6 +27,7 @@ import {
   FaChevronDown,
   FaEye,
   FaEyeSlash,
+  FaSearch,
 } from "react-icons/fa";
 import Swal from "sweetalert2";
 import { UnifiedIconPicker } from "@/components/admin/icon-picker";
@@ -34,6 +35,8 @@ import {
   defaultPortfolioContent,
   type PortfolioContent,
 } from "@/lib/portfolio-content";
+
+const SearchHighlightContext = createContext("");
 
 function toLines(values: string[]) {
   return values.join("\n");
@@ -75,6 +78,29 @@ function showToast(icon: "success" | "error" | "info", title: string) {
   });
 }
 
+function escapeRegex(value: string) {
+  return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
+function highlightText(text: string, query: string): ReactNode {
+  const q = query.trim();
+  if (!q) return text;
+  const pattern = new RegExp(`(${escapeRegex(q)})`, "gi");
+  const parts = text.split(pattern);
+  return parts.map((part, index) =>
+    part.toLowerCase() === q.toLowerCase() ? (
+      <mark
+        key={`${part}-${index}`}
+        className="rounded bg-amber-300/70 px-1 text-amber-950 dark:bg-amber-300/40 dark:text-amber-100"
+      >
+        {part}
+      </mark>
+    ) : (
+      <span key={`${part}-${index}`}>{part}</span>
+    ),
+  );
+}
+
 function Field({
   label,
   value,
@@ -88,17 +114,33 @@ function Field({
   type?: string;
   icon?: ComponentType<{ className?: string }>;
 }) {
+  const searchQuery = useContext(SearchHighlightContext);
+  const normalizedQuery = searchQuery.trim().toLowerCase();
+  const hasMatch =
+    !!normalizedQuery &&
+    (label.toLowerCase().includes(normalizedQuery) ||
+      value.toLowerCase().includes(normalizedQuery));
+
   return (
     <label className="space-y-1.5 block">
       <span className="text-xs font-semibold text-muted-foreground inline-flex items-center gap-1.5">
         {Icon ? <Icon className="h-3.5 w-3.5" /> : null}
-        {label}
+        {highlightText(label, searchQuery)}
+        {hasMatch && normalizedQuery ? (
+          <span className="rounded-full border border-amber-400/70 bg-amber-100 px-1.5 py-0.5 text-[10px] font-semibold text-amber-800 dark:bg-amber-900/30 dark:text-amber-200">
+            Matched
+          </span>
+        ) : null}
       </span>
       <input
         type={type}
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        className="w-full rounded-xl border border-input bg-background px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-teal-500/40"
+        className={`w-full rounded-xl border bg-background px-3 py-2.5 text-sm focus:outline-none focus:ring-2 ${
+          hasMatch
+            ? "border-amber-400/80 bg-amber-50/70 focus:ring-amber-400/40 dark:bg-amber-900/15"
+            : "border-input focus:ring-teal-500/40"
+        }`}
       />
     </label>
   );
@@ -115,11 +157,29 @@ function TextAreaField({
   onChange: (value: string) => void;
   rows: number;
 }) {
+  const searchQuery = useContext(SearchHighlightContext);
+  const normalizedQuery = searchQuery.trim().toLowerCase();
+  const hasMatch =
+    !!normalizedQuery &&
+    (label.toLowerCase().includes(normalizedQuery) ||
+      value.toLowerCase().includes(normalizedQuery));
+
   return (
     <label className="space-y-1.5 block">
-      <span className="text-xs font-semibold text-muted-foreground">{label}</span>
+      <span className="text-xs font-semibold text-muted-foreground inline-flex items-center gap-1.5">
+        {highlightText(label, searchQuery)}
+        {hasMatch && normalizedQuery ? (
+          <span className="rounded-full border border-amber-400/70 bg-amber-100 px-1.5 py-0.5 text-[10px] font-semibold text-amber-800 dark:bg-amber-900/30 dark:text-amber-200">
+            Matched
+          </span>
+        ) : null}
+      </span>
       <textarea
-        className="w-full rounded-xl border border-input bg-background px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-teal-500/40"
+        className={`w-full rounded-xl border bg-background px-3 py-2.5 text-sm focus:outline-none focus:ring-2 ${
+          hasMatch
+            ? "border-amber-400/80 bg-amber-50/70 focus:ring-amber-400/40 dark:bg-amber-900/15"
+            : "border-input focus:ring-teal-500/40"
+        }`}
         rows={rows}
         value={value}
         onChange={(e) => onChange(e.target.value)}
@@ -133,11 +193,15 @@ function SectionCard({
   icon: Icon,
   children,
   defaultOpen = true,
+  searchQuery = "",
+  titleHasMatch = false,
 }: {
   title: string;
   icon: ComponentType<{ className?: string }>;
   children: ReactNode;
   defaultOpen?: boolean;
+  searchQuery?: string;
+  titleHasMatch?: boolean;
 }) {
   const [open, setOpen] = useState(defaultOpen);
   return (
@@ -151,7 +215,12 @@ function SectionCard({
           <span className="w-8 h-8 rounded-lg bg-teal-500/10 text-teal-600 dark:text-teal-300 flex items-center justify-center">
             <Icon className="h-4 w-4" />
           </span>
-          {title}
+          {highlightText(title, searchQuery)}
+          {searchQuery.trim() && !titleHasMatch ? (
+            <mark className="rounded bg-amber-300/70 px-1.5 py-0.5 text-[10px] font-semibold text-amber-950 dark:bg-amber-300/40 dark:text-amber-100">
+              {searchQuery.trim()}
+            </mark>
+          ) : null}
         </span>
         <FaChevronDown className={`h-3.5 w-3.5 transition-transform ${open ? "rotate-180" : "rotate-0"}`} />
       </button>
@@ -167,8 +236,97 @@ export default function AdminPage() {
   const [newAdminUser, setNewAdminUser] = useState("");
   const [newAdminPass, setNewAdminPass] = useState("");
   const [showAdminPass, setShowAdminPass] = useState(false);
+  const [sectionSearch, setSectionSearch] = useState("");
 
   const sectionsCount = useMemo(() => 10, []);
+  const sectionFilters = useMemo(
+    () => [
+      { title: "Basic Information", keywords: ["basic", "info", "name", "email", "phone", "facebook", "instagram", "profile"] },
+      { title: "Summary & About", keywords: ["summary", "about", "highlights"] },
+      { title: "Skill Categories", keywords: ["skills", "category", "expertise"] },
+      { title: "Services", keywords: ["services", "service"] },
+      { title: "Navigation Links (Header)", keywords: ["nav", "navigation", "header", "links"] },
+      { title: "Experience", keywords: ["experience", "role", "company"] },
+      { title: "Education", keywords: ["education", "degree", "institution"] },
+      { title: "Certifications", keywords: ["certifications", "certificate", "issuer"] },
+      { title: "Soft Skills & Languages", keywords: ["soft skills", "languages", "language"] },
+      { title: "Admin Credentials", keywords: ["admin", "credentials", "password", "username", "login"] },
+    ],
+    [],
+  );
+  const searchQuery = sectionSearch.trim().toLowerCase();
+  const sectionSearchIndex = useMemo<Record<string, string>>(
+    () => ({
+      "Basic Information": [
+        content.personalInfo.name,
+        content.personalInfo.title,
+        content.personalInfo.shortTitle,
+        content.personalInfo.location,
+        content.personalInfo.email,
+        content.personalInfo.phone,
+        content.personalInfo.university,
+        content.personalInfo.social.facebook,
+        content.personalInfo.social.instagram,
+        content.personalInfo.profileImage,
+      ]
+        .join(" ")
+        .toLowerCase(),
+      "Summary & About": [content.professionalSummary, ...content.aboutHighlights]
+        .join(" ")
+        .toLowerCase(),
+      "Skill Categories": content.skillCategories
+        .flatMap((category) => [category.title, category.icon, ...category.skills])
+        .join(" ")
+        .toLowerCase(),
+      Services: content.services
+        .flatMap((service) => [service.title, service.description, service.icon])
+        .join(" ")
+        .toLowerCase(),
+      "Navigation Links (Header)": content.navLinks
+        .flatMap((link) => [link.label, link.href, (link as { icon?: string }).icon ?? ""])
+        .join(" ")
+        .toLowerCase(),
+      Experience: content.experiences
+        .flatMap((experience) => [
+          experience.role,
+          experience.company,
+          experience.location,
+          experience.period,
+          ...experience.responsibilities,
+        ])
+        .join(" ")
+        .toLowerCase(),
+      Education: content.education
+        .flatMap((item) => [item.degree, item.institution, item.period, item.location, item.details ?? ""])
+        .join(" ")
+        .toLowerCase(),
+      Certifications: content.certifications
+        .flatMap((item) => [item.name, item.issuer, item.link ?? ""])
+        .join(" ")
+        .toLowerCase(),
+      "Soft Skills & Languages": [
+        ...content.softSkills,
+        ...content.languages.flatMap((lang) => [lang.name, lang.level]),
+      ]
+        .join(" ")
+        .toLowerCase(),
+      "Admin Credentials": [newAdminUser].join(" ").toLowerCase(),
+    }),
+    [content, newAdminUser],
+  );
+  const isSectionVisible = (title: string) => {
+    if (!searchQuery) return true;
+    const section = sectionFilters.find((item) => item.title === title);
+    if (!section) return false;
+    return (
+      section.title.toLowerCase().includes(searchQuery) ||
+      section.keywords.some((keyword) => keyword.toLowerCase().includes(searchQuery)) ||
+      (sectionSearchIndex[title] ?? "").includes(searchQuery)
+    );
+  };
+  const visibleSectionsCount = sectionFilters.filter((item) => isSectionVisible(item.title)).length;
+  const titleMatchesSearch = (title: string) =>
+    !!searchQuery && title.toLowerCase().includes(searchQuery);
 
   const fetchContent = async () => {
     const res = await fetch("/api/content", { cache: "no-store" });
@@ -313,8 +471,27 @@ export default function AdminPage() {
           )}
         </motion.div>
 
+        <div className="rounded-2xl border border-border bg-card/80 p-4 sm:p-5">
+          <label className="space-y-1.5 block">
+            <span className="text-xs font-semibold text-muted-foreground">Search In Dashboard</span>
+            <div className="relative">
+              <FaSearch className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground" />
+              <input
+                value={sectionSearch}
+                onChange={(e) => setSectionSearch(e.target.value)}
+                placeholder="Search sections: skills, education, contact, admin..."
+                className="w-full rounded-xl border border-input bg-background pl-9 pr-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-teal-500/40"
+              />
+            </div>
+            <p className="text-xs text-muted-foreground">
+              Showing {visibleSectionsCount} of {sectionsCount} sections
+            </p>
+          </label>
+        </div>
+
+        <SearchHighlightContext.Provider value={sectionSearch}>
         <div className="space-y-4">
-          <SectionCard title="Basic Information" icon={FaUser}>
+          {isSectionVisible("Basic Information") && <SectionCard title="Basic Information" icon={FaUser} searchQuery={sectionSearch} titleHasMatch={titleMatchesSearch("Basic Information")}>
             <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
               <Field label="Full Name" icon={FaUser} value={content.personalInfo.name} onChange={(v) => setContent((p) => ({ ...p, personalInfo: { ...p.personalInfo, name: v } }))} />
               <Field label="Main Title" icon={FaBriefcase} value={content.personalInfo.title} onChange={(v) => setContent((p) => ({ ...p, personalInfo: { ...p.personalInfo, title: v } }))} />
@@ -341,14 +518,14 @@ export default function AdminPage() {
                 ) : null}
               </div>
             </div>
-          </SectionCard>
+          </SectionCard>}
 
-          <SectionCard title="Summary & About" icon={FaBook}>
+          {isSectionVisible("Summary & About") && <SectionCard title="Summary & About" icon={FaBook} searchQuery={sectionSearch} titleHasMatch={titleMatchesSearch("Summary & About")}>
             <TextAreaField label="Professional Summary" value={content.professionalSummary} rows={5} onChange={(v) => setContent((p) => ({ ...p, professionalSummary: v }))} />
             <TextAreaField label="About Highlights (one per line)" value={toLines(content.aboutHighlights)} rows={5} onChange={(v) => setContent((p) => ({ ...p, aboutHighlights: fromLines(v) }))} />
-          </SectionCard>
+          </SectionCard>}
 
-          <SectionCard title="Skill Categories" icon={FaWrench}>
+          {isSectionVisible("Skill Categories") && <SectionCard title="Skill Categories" icon={FaWrench} searchQuery={sectionSearch} titleHasMatch={titleMatchesSearch("Skill Categories")}>
             {content.skillCategories.map((cat, i) => (
               <div key={i} className="rounded-xl border border-border p-3 sm:p-4 space-y-3">
                 <div className="grid gap-3 sm:grid-cols-2">
@@ -366,9 +543,9 @@ export default function AdminPage() {
                 <FaPlus className="h-3 w-3" /> Add Category
               </button>
             </div>
-          </SectionCard>
+          </SectionCard>}
 
-          <SectionCard title="Services" icon={FaServer}>
+          {isSectionVisible("Services") && <SectionCard title="Services" icon={FaServer} searchQuery={sectionSearch} titleHasMatch={titleMatchesSearch("Services")}>
             {content.services.map((service, i) => (
               <div key={i} className="rounded-xl border border-border p-3 sm:p-4 space-y-3">
                 <div className="grid gap-3 sm:grid-cols-2">
@@ -386,9 +563,9 @@ export default function AdminPage() {
                 <FaPlus className="h-3 w-3" /> Add Service
               </button>
             </div>
-          </SectionCard>
+          </SectionCard>}
 
-          <SectionCard title="Navigation Links (Header)" icon={FaHome}>
+          {isSectionVisible("Navigation Links (Header)") && <SectionCard title="Navigation Links (Header)" icon={FaHome} searchQuery={sectionSearch} titleHasMatch={titleMatchesSearch("Navigation Links (Header)")}>
             {content.navLinks.map((link, i) => (
               <div key={i} className="rounded-xl border border-border p-3 sm:p-4 space-y-3">
                 <div className="grid gap-3 sm:grid-cols-3">
@@ -406,9 +583,9 @@ export default function AdminPage() {
                 <FaPlus className="h-3 w-3" /> Add Nav Link
               </button>
             </div>
-          </SectionCard>
+          </SectionCard>}
 
-          <SectionCard title="Experience" icon={FaBriefcase}>
+          {isSectionVisible("Experience") && <SectionCard title="Experience" icon={FaBriefcase} searchQuery={sectionSearch} titleHasMatch={titleMatchesSearch("Experience")}>
             {content.experiences.map((exp, i) => (
               <div key={i} className="rounded-xl border border-border p-3 sm:p-4 space-y-3">
                 <div className="grid gap-3 sm:grid-cols-2">
@@ -428,9 +605,9 @@ export default function AdminPage() {
                 <FaPlus className="h-3 w-3" /> Add Experience
               </button>
             </div>
-          </SectionCard>
+          </SectionCard>}
 
-          <SectionCard title="Education" icon={FaUniversity}>
+          {isSectionVisible("Education") && <SectionCard title="Education" icon={FaUniversity} searchQuery={sectionSearch} titleHasMatch={titleMatchesSearch("Education")}>
             {content.education.map((edu, i) => (
               <div key={i} className="rounded-xl border border-border p-3 sm:p-4 space-y-3">
                 <div className="grid gap-3 sm:grid-cols-2">
@@ -449,9 +626,9 @@ export default function AdminPage() {
                 <FaPlus className="h-3 w-3" /> Add Education
               </button>
             </div>
-          </SectionCard>
+          </SectionCard>}
 
-          <SectionCard title="Certifications" icon={FaAward}>
+          {isSectionVisible("Certifications") && <SectionCard title="Certifications" icon={FaAward} searchQuery={sectionSearch} titleHasMatch={titleMatchesSearch("Certifications")}>
             {content.certifications.map((cert, i) => (
               <div key={i} className="rounded-xl border border-border p-3 sm:p-4 space-y-3">
                 <div className="grid gap-3 sm:grid-cols-2">
@@ -469,9 +646,9 @@ export default function AdminPage() {
                 <FaPlus className="h-3 w-3" /> Add Certification
               </button>
             </div>
-          </SectionCard>
+          </SectionCard>}
 
-          <SectionCard title="Soft Skills & Languages" icon={FaGlobe}>
+          {isSectionVisible("Soft Skills & Languages") && <SectionCard title="Soft Skills & Languages" icon={FaGlobe} searchQuery={sectionSearch} titleHasMatch={titleMatchesSearch("Soft Skills & Languages")}>
             <TextAreaField label="Soft Skills (one per line)" value={toLines(content.softSkills)} rows={6} onChange={(v) => setContent((p) => ({ ...p, softSkills: fromLines(v) }))} />
             <TextAreaField
               label="Languages (format: Name - Level)"
@@ -487,9 +664,9 @@ export default function AdminPage() {
                 }))
               }
             />
-          </SectionCard>
+          </SectionCard>}
 
-          <SectionCard title="Admin Credentials" icon={FaShieldAlt}>
+          {isSectionVisible("Admin Credentials") && <SectionCard title="Admin Credentials" icon={FaShieldAlt} searchQuery={sectionSearch} titleHasMatch={titleMatchesSearch("Admin Credentials")}>
             <div className="grid gap-3 sm:grid-cols-2">
               <Field label="New Admin Username" value={newAdminUser} onChange={setNewAdminUser} />
               <label className="space-y-1.5 block">
@@ -520,8 +697,14 @@ export default function AdminPage() {
             >
               <FaShieldAlt className="h-3.5 w-3.5" /> Update Admin Login
             </button>
-          </SectionCard>
+          </SectionCard>}
+          {visibleSectionsCount === 0 && (
+            <div className="rounded-2xl border border-border bg-card/70 p-6 text-center text-sm text-muted-foreground">
+              No sections matched your search. Try another keyword.
+            </div>
+          )}
         </div>
+        </SearchHighlightContext.Provider>
       </div>
     </main>
   );
