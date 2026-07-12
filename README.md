@@ -1,3 +1,9 @@
+<img width="1358" height="648" alt="image" src="https://github.com/user-attachments/assets/db41f301-251d-40fc-8806-717a153724af" />
+__________________________________________________________________________________________________________________________________
+
+<img width="1358" height="648" alt="image" src="https://github.com/user-attachments/assets/4b344510-9ddd-4ea6-97a9-2297028c42b3" />
+
+
 # Mohamed Mamdouh Portfolio
 
 Professional portfolio website for **Mohamed Mamdouh Khairy Abdelkawy** built with **Next.js 16**, **TypeScript**, **Tailwind CSS**, and modern UI components.
